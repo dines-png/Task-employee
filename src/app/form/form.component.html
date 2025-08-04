@@ -1,0 +1,537 @@
+<div class="container mt-4">
+
+
+    
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="heading mb-0">Employee Master Management</h2>
+        <div>
+            <button type="button" class="btn btn-secondary me-2 custom-add" (click)="onAdd()">Add Employee</button>
+            <button type="submit" class="btn btn-success me-2 custom-save" [disabled]="employeeForm.invalid"
+                (click)="onSave()">
+                Save
+            </button>
+            <button type="button" class="btn btn-secondary me-2 custom-edit" (click)="onEdit()">Edit</button>
+            <button type="button" class="btn btn-secondary me-2 custom-cancel" (click)="onCancel()">Cancel</button>
+
+            <button type="button" class="btn btn-danger custom-delete" (click)="onDelete()">Delete</button>
+        </div>
+    </div>
+
+
+    <form [formGroup]="employeeForm" (ngSubmit)="onSave()" #employeeNgForm="ngForm" *ngIf="showForm">
+     
+        <ul class="nav nav-tabs mb-3" id="employeeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal"
+                    type="button" role="tab">Personal Info</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="employment-tab" data-bs-toggle="tab" data-bs-target="#employment"
+                    type="button" role="tab">Employment Details</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="compensation-tab" data-bs-toggle="tab" data-bs-target="#compensation"
+                    type="button" role="tab">Compensation Details</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button"
+                    role="tab">Address Information</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" type="button"
+                    role="tab">Other Information</button>
+            </li>
+
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="employeeTabsContent">
+
+            <!-- Personal Info -->
+            <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Employee ID</label>
+                        <input type="text" class="form-control" formControlName="employeeId" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">First Name</label>
+                        <input type="text" class="form-control" formControlName="firstName" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched">
+                            <small *ngIf="employeeForm.get('firstName')?.errors?.['required']">First Name is
+                                required.</small>
+                            <small *ngIf="employeeForm.get('firstName')?.errors?.['minlength']">Minimum 3 characters
+                                required.</small>
+                            <small *ngIf="employeeForm.get('firstName')?.errors?.['pattern']">
+                                Enter a valid name
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+
+                    <div class="col-md-6">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" formControlName="lastName" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required">Date of Birth</label>
+                        <input type="date" class="form-control" formControlName="dob" [attr.max]="maxDob" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('dob')?.invalid && employeeForm.get('dob')?.touched">
+                            <small *ngIf="employeeForm.get('dob')?.errors?.['required']">Date of Birth is
+                                required.</small>
+                            <small *ngIf="employeeForm.get('dob')?.errors?.['futureDate']">Future dates are not
+                                allowed.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">Gender</label>
+                        <select formControlName="gender" class="form-select">
+                            <option value="">Select</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('gender')?.invalid && employeeForm.get('gender')?.touched">
+                            <small>Gender is required.</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required">Email</label>
+                        <input type="email" class="form-control" formControlName="email" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched">
+                            <small *ngIf="employeeForm.get('email')?.errors?.['required']">Email is required.</small>
+                            <small *ngIf="employeeForm.get('email')?.errors?.['email']">Enter a valid email
+                                address.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">Phone Number</label>
+                        <input type="text" class="form-control" formControlName="phoneNumber" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('phoneNumber')?.invalid && employeeForm.get('phoneNumber')?.touched">
+                            <small *ngIf="employeeForm.get('phoneNumber')?.errors?.['required']">Phone Number is
+                                required.</small>
+                            <small *ngIf="employeeForm.get('phoneNumber')?.errors?.['pattern']">Enter a valid 10-digit
+                                number.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employment Details -->
+            <div class="tab-pane fade" id="employment" role="tabpanel">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">Department</label>
+                        <select class="form-select" formControlName="department">
+                            <option value="">Select</option>
+                            <option>HR</option>
+                            <option>IT</option>
+                        </select>
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('department')?.invalid && employeeForm.get('department')?.touched">
+                            <small>Department is required.</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required">Job Title</label>
+                        <select class="form-select" formControlName="jobTitle">
+                            <option value="">Select</option>
+                            <option>DevOps Engineer</option>
+                            <option>System Administrator</option>
+                            <option>Database Administrator</option>
+                            <option>Full Stack Developer</option>
+                        </select>
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('jobTitle')?.invalid && employeeForm.get('jobTitle')?.touched">
+                            <small>Job Title is required.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">Employment Type</label>
+                        <select class="form-select" formControlName="employmentType">
+                            <option value="">Select</option>
+                            <option>Full-Time</option>
+                            <option>Part-Time</option>
+                        </select>
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('employmentType')?.invalid && employeeForm.get('employmentType')?.touched">
+                            <small>Employment Type is required.</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required">Hire Date</label>
+                        <input type="date" class="form-control" formControlName="hireDate" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('hireDate')?.invalid && employeeForm.get('hireDate')?.touched">
+                            <small>Hire Date is required.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">Employee Status</label>
+                        <select class="form-select" formControlName="employeeStatus">
+                            <option value="">Select</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                        </select>
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('employeeStatus')?.invalid && employeeForm.get('employeeStatus')?.touched">
+                            <small>Employee Status is required.</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Manager</label>
+                        <input type="text" class="form-control" formControlName="manager" />
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Compensation Details -->
+            <div class="tab-pane fade" id="compensation" role="tabpanel">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">Salary</label>
+                        <input type="text" class="form-control" formControlName="salary" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('salary')?.invalid && employeeForm.get('salary')?.touched">
+                            <small *ngIf="employeeForm.get('salary')?.errors?.['required']">Salary is required.</small>
+                            <small *ngIf="employeeForm.get('salary')?.errors?.['pattern']">Salary must be a
+                                number.</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required">Pay Frequency</label>
+                        <select class="form-select" formControlName="payFrequency">
+                            <option value="">Select</option>
+                            <option>Anually</option>
+                            <option>Monthly</option>
+                            <option>Weekly</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">Bank Account Number</label>
+                        <input type="text" class="form-control" formControlName="bankAccount" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('bankAccount')?.invalid && employeeForm.get('bankAccount')?.touched">
+                            <small *ngIf="employeeForm.get('bankAccount')?.errors?.['required']">Bank Account Number is
+                                required.</small>
+                            <small *ngIf="employeeForm.get('bankAccount')?.errors?.['pattern']">Enter a valid 9–18 digit
+                                account number.</small>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="address" role="tabpanel">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">Address Line 1</label>
+                        <input type="text" class="form-control" formControlName="addressLine1" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('addressLine1')?.invalid && employeeForm.get('addressLine1')?.touched">
+                            <small>Address Line 1 is required.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Address Line 2</label>
+                        <input type="text" class="form-control" formControlName="addressLine2" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">City</label>
+                        <input type="text" class="form-control" formControlName="city" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('city')?.invalid && employeeForm.get('city')?.touched">
+                            <small>City is required.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">State/Province</label>
+                        <input type="text" class="form-control" formControlName="state" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('state')?.invalid && employeeForm.get('state')?.touched">
+                            <small>State/Province is required.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">Postal Code</label>
+                        <input type="text" class="form-control" formControlName="postalCode" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('postalCode')?.invalid && employeeForm.get('postalCode')?.touched">
+                            <small *ngIf="employeeForm.get('postalCode')?.errors?.['required']">Postal Code is
+                                required.</small>
+                            <small *ngIf="employeeForm.get('postalCode')?.errors?.['pattern']">Invalid postal
+                                code.</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="required">Country</label>
+                        <input type="text" class="form-control" formControlName="country" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('country')?.invalid && employeeForm.get('country')?.touched">
+                            <small>Country is required.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="other" role="tabpanel">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="required">Emergency Contact Name</label>
+                        <input type="text" class="form-control" formControlName="emergencyContactName" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('emergencyContactName')?.invalid && employeeForm.get('emergencyContactName')?.touched">
+                            <small>Emergency Contact Name is required.</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required">Emergency Contact Number</label>
+                        <input type="text" class="form-control" formControlName="emergencyContactNumber" />
+                        <div class="text-danger mt-1"
+                            *ngIf="employeeForm.get('emergencyContactNumber')?.invalid && employeeForm.get('emergencyContactNumber')?.touched">
+                            <small *ngIf="employeeForm.get('emergencyContactNumber')?.errors?.['required']">
+                                Emergency Contact Number is required.
+                            </small>
+                            <small *ngIf="employeeForm.get('emergencyContactNumber')?.errors?.['pattern']">
+                                Enter a valid 10-digit number.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Notes/Comments</label>
+                    <textarea class="form-control" formControlName="notes" rows="3"></textarea>
+                </div>
+            </div>
+
+
+
+            <div class="d-flex justify-content-center gap-2 mt-2 mb-0">
+                <button type="button" class="btn btn-outline-primary" (click)="navigateTab(-1)"
+                    [disabled]="currentTabIndex === 0">
+                    Previous
+                </button>
+                <button type="button" class="btn btn-outline-primary" (click)="navigateTab(1)"
+                    [disabled]="currentTabIndex === tabIds.length - 1">
+                    Next
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+
+
+
+    <div class="container table-responsive mt-5">
+        <div class="row g-2 mb-3 justify-content-between d-flex">
+            <div class="col-12 col-md-2">
+                <h5 class="mt-2">Search Employee:</h5>
+            </div>
+            <div class="col-12 col-md-2">
+                <input type="text" class="form-control" placeholder="Search by ID, Name" [value]="searchTerm"
+                    (input)="onSearchChange($event)" />
+            </div>
+            <div class="col-12 col-md-2">
+                <select class="form-select" [value]="filterDepartment" (change)="onDepartmentChange($event)">
+                    <option value="">All Departments</option>
+                    <option *ngFor="let dept of uniqueDepartments" [value]="dept">{{ dept }}</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-2">
+                <select class="form-select" [value]="filterStatus" (change)="onStatusChange($event)">
+                    <option value="">All Statuses</option>
+                    <option *ngFor="let status of uniqueStatuses" [value]="status">{{ status }}</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-2">
+                <input type="date" class="form-control" [value]="filterHireDate" placeholder="Search by hireDate"
+                    (change)="onHireDateChange($event)" />
+            </div>
+            <div class="col-12 col-md-2 ">
+                <button class="btn btn-outline-secondary w-100" (click)="resetFilters()">
+                    Reset Search
+                </button>
+            </div>
+        </div>
+
+
+        <table class="table table-sm table-bordered table-striped mt-4">
+
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>
+                        <input type="checkbox" (change)="toggleAllRows($event)" />
+                    </th>
+                    <th>Employee ID</th>
+                    <th>First Name</th>
+                    <th>Department</th>
+                    <th>Job Title</th>
+                    <th>Hire Date</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class=" text-center" *ngIf="employeeForm.get('selectedEmployees')">
+                <tr *ngFor="let emp of paginatedEmployees; let i = index">
+                    <td>
+                        <input type="checkbox" [formControl]="getCheckboxControl(i)" />
+                    </td>
+                    <td>{{ emp.employeeId }}</td>
+                    <td>{{ emp.firstName }}</td>
+                    <td>{{ emp.department }}</td>
+                    <td>{{ emp.jobTitle }}</td>
+                    <td>{{ emp.hireDate | date: 'yyyy-MM-dd' }}</td>
+                    <td>{{ emp.phoneNumber }}</td>
+                    <td>{{ emp.email }}</td>
+                    <td>{{ emp.employeeStatus }}</td>
+                    <td> <button class="icon-btn" (click)="viewEmployee(emp)"
+                            title="View Employee" data-bs-toggle="tooltip" data-bs-placement="top">
+                           <i class="bi bi-eye-fill fs-5"></i>
+                        </button></td>
+                </tr>
+            </tbody>
+
+
+        </table>
+
+        <div *ngIf="filteredEmployees.length === 0" class="custom-alert alert alert-warning text-center mt-3">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            No employees found 
+        </div>
+
+        <div class="d-flex justify-content-center mt-3">
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item" [class.disabled]="currentPage === 1">
+                        <button class="page-link" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1"
+                            title="Previous">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                    </li>
+
+                    <li class="page-item" [class.disabled]="currentPage === totalPages || totalPages === 0">
+                        <button class="page-link" (click)="changePage(currentPage + 1)"
+                            [disabled]="currentPage === totalPages || totalPages === 0" title="Next">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+
+
+    </div>
+
+</div>
+
+
+<!-- View Employee Modal -->
+<div class="modal fade" id="viewEmployeeModal" tabindex="-1" aria-labelledby="viewEmployeeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewEmployeeModalLabel">Employee Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" *ngIf="selectedEmployee">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Personal Details</h5>
+                        <p><strong>Employee ID:</strong> {{ selectedEmployee.employeeId }}</p>
+                        <p><strong>First Name:</strong> {{ selectedEmployee.firstName }}</p>
+                        <p><strong>Last Name:</strong> {{ selectedEmployee.lastName }}</p>
+                        <p><strong>Date of Birth:</strong> {{ selectedEmployee.dob | date }}</p>
+                        <p><strong>Gender:</strong> {{ selectedEmployee.gender }}</p>
+                        <p><strong>Email:</strong> {{ selectedEmployee.email }}</p>
+                        <p><strong>Phone Number:</strong> {{ selectedEmployee.phoneNumber }}</p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5>Employment Details</h5>
+                        <p><strong>Department:</strong> {{ selectedEmployee.department }}</p>
+                        <p><strong>Job Title:</strong> {{ selectedEmployee.jobTitle }}</p>
+                        <p><strong>Employment Type:</strong> {{ selectedEmployee.employmentType }}</p>
+                        <p><strong>Hire Date:</strong> {{ selectedEmployee.hireDate | date }}</p>
+                        <p><strong>Status:</strong> {{ selectedEmployee.employeeStatus }}</p>
+                        <p><strong>Manager:</strong> {{ selectedEmployee.manager || '-' }}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Compensation Detail</h5>
+                        <p><strong>Salary:</strong> {{ selectedEmployee.salary }}</p>
+                        <p><strong>Pay Frequency:</strong> {{ selectedEmployee.payFrequency }}</p>
+                        <p><strong>Bank Account:</strong> {{ selectedEmployee.bankAccount }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Address Detail</h5>
+                        <p><strong>Address Line 1:</strong> {{ selectedEmployee.addressLine1 }}</p>
+                        <p><strong>Address Line 2:</strong> {{ selectedEmployee.addressLine2 || '-' }}</p>
+                        <p><strong>City:</strong> {{ selectedEmployee.city }}</p>
+                        <p><strong>State:</strong> {{ selectedEmployee.state }}</p>
+                        <p><strong>Postal Code:</strong> {{ selectedEmployee.postalCode }}</p>
+                        <p><strong>Country:</strong> {{ selectedEmployee.country }}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Emergency Contact Detail</h5>
+                        <p><strong>Emergency Contact Name:</strong> {{ selectedEmployee.emergencyContactName }}</p>
+                        <p><strong>Emergency Contact Number:</strong> {{ selectedEmployee.emergencyContactNumber }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Notes:</strong> {{ selectedEmployee.notes || '-' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
